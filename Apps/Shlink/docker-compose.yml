@@ -36,7 +36,7 @@ services:
           description:
             en_us: Web client server data
 
-    command: touch /usr/share/nginx/html/servers.json
+    command: sh -c touch /usr/share/nginx/html/servers.json
 
     networks:
       - shlink_default
