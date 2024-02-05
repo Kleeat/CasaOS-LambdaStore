@@ -1,6 +1,7 @@
-version: "3"
-
+name: shlink
 services:
+
+# Shlink Backend
   shlink:
     image: shlinkio/shlink:stable
     restart: unless-stopped
@@ -17,7 +18,39 @@ services:
       - database
     ports:
       - 8081:8080
+    x-casaos:
+      envs:
+        - container: TZ
+          description:
+            en_us: The Time zone in use
+        - container: DEFAULT_DOMAIN
+          description:
+            en_us: The Domain to be used for shortening
+        - container: IS_HTTPS_ENABLED
+          description:
+            en_us: Enable HTTPS
+        # - container: DB_DRIVER
+        #   description:
+        #     en_us: Database driver
+        # - container: DB_USER
+        #   description:
+        #     en_us: Name of database user
+        # - container: DB_NAME
+        #   description:
+        #     en_us: Name of the database
+        # - container: DB_PASSWORD
+        #   description:
+        #     en_us: Database password
+        # - container: DB_HOST
+        #   description:
+        #     en_us: Database host address
+      ports:
+        - container: "8080"
+          description:
+            en_us: API port
+    container_name: shlink
 
+# Postgres database
   database:
     image: postgres:alpine
     restart: unless-stopped
@@ -27,7 +60,24 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=shlink
       - POSTGRES_DB=shlink
+    x-casaos:
+      # envs:
+      #   - container: POSTGRES_PASSWORD
+      #     description:
+      #       en_us: TDatabase password
+      #   - container: POSTGRES_USER
+      #     description:
+      #       en_us: Name of the database user
+      #   - container: POSTGRES_DB
+      #     description:
+      #       en_us: Name of the database
+      volumes:
+        - container: /var/lib/postgresql/data
+          description:
+            en_us: Postgres data directory
+    container_name: db
 
+# Shlink web client
   shlink-web-client:
     image: shlinkio/shlink-web-client
     restart: unless-stopped
@@ -35,3 +85,44 @@ services:
       - /DATA/AppData/shlink/servers.json:/usr/share/nginx/html/servers.json
     ports:
       - 8082:8080
+    x-casaos:
+      ports:
+        - container: "8080"
+          description:
+            en_us: Web UI port
+      volumes:
+        - container: /usr/share/nginx/html/servers.json
+          description:
+            en_us: Web client server data
+    container_name: web-client
+
+# casaos data
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main: shlink
+  author: Kleeat
+  # category: Developer
+  description:
+    en_us: Shlink is a self-hosted url shortener.
+  developer: Gitea
+  # icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Gitea/icon.png
+  # screenshot_link:
+  #   - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Gitea/screenshot-1.jpg
+  #   - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Gitea/screenshot-2.jpg
+  #   - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Gitea/screenshot-3.jpg
+  #   - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Gitea/screenshot-4.jpg
+  #   - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Gitea/screenshot-5.jpg
+  #   - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Gitea/screenshot-6.jpg
+  tagline:
+    en_us: Short urls with a click
+  thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Gitea/thumbnail.png
+  tips:
+    before_install:
+      en_us: |
+        Before installing the servers.json must be manually created.
+  title:
+    en_us: Shlink
+  index: /
+  port_map: "8082"
