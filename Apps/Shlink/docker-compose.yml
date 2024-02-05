@@ -42,7 +42,8 @@ services:
             - -g
             - daemon off;
 
-    network_mode: shlink_default
+    networks: 
+      - shlink_default
   
 # Shlink backend
   shlink:
@@ -87,7 +88,8 @@ services:
           description:
             en_us: API port
 
-    network_mode: shlink_default
+    networks: 
+      - shlink_default
 
 # postgres database
   database:
@@ -114,7 +116,8 @@ services:
           description:
             en_us: Postgres data directory
 
-    network_mode: shlink_default
+    networks: 
+      - shlink_default
 
 networks:
   shlink_default:
@@ -131,7 +134,7 @@ x-casaos:
     en_us: Shlink is a self-hosted url shortener.
   developer: Shlinkio
   hostname: ""
-  icon: https://cdn.jsdelivr.net/gh/Kleeat/CasaOS-LambdaStore@main/Apps/Shlink/icon.png
+  icon: https://cdn.jsdelivr.net/gh/Kleeat/CasaOS-LambdaStore@latest/Apps/Shlink/icon.png
   index: /
   main: shlink
   port_map: "8082"
