@@ -49,7 +49,7 @@ services:
     
     environment:
       - DB_DRIVER=postgres
-      - DB_HOST=database
+      - DB_HOST=db
       - DB_NAME=shlink
       - DB_PASSWORD=password
       - DB_USER=shlink
