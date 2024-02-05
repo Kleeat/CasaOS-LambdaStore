@@ -37,7 +37,8 @@ services:
 
     command: touch /usr/share/nginx/html/servers.json
 
-    network_mode: shlink_default
+    networks:
+      - shlink_default
   
 # Shlink backend
   shlink:
@@ -82,7 +83,8 @@ services:
           description:
             en_us: API port
 
-    network_mode: shlink_default
+    networks:
+      - shlink_default
 
 # postgres database
   database:
@@ -109,7 +111,8 @@ services:
           description:
             en_us: Postgres data directory
 
-    network_mode: shlink_default
+    networks:
+      - shlink_default
 
 networks:
   shlink_default:
