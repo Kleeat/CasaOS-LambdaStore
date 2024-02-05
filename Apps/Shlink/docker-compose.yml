@@ -17,8 +17,8 @@ services:
     
     volumes:
       - type: bind
-        source: /DATA/AppData/shlink/servers.json
-        target: /usr/share/nginx/html/servers.json
+        source: /DATA/AppData/shlink
+        target: /usr/share/nginx/html
         bind:
           create_host_path: true
     x-casaos:
@@ -27,9 +27,11 @@ services:
           description:
             en_us: Web UI port
       volumes:
-        - container: /usr/share/nginx/html/servers.json
+        - container: /usr/share/nginx/html
           description:
             en_us: Web client server data
+
+    command: touch /usr/share/nginx/html/servers.json
 
     network_mode: bridge
   
