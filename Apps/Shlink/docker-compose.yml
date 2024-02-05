@@ -15,7 +15,8 @@ services:
         required: true
     
     ports:
-      - target: 8080
+      - mode: ingress
+        target: 8080
         published: "8082"
         protocol: tcp
     
@@ -37,8 +38,7 @@ services:
 
     command: touch /usr/share/nginx/html/servers.json
 
-    networks:
-      - shlink_default
+    network_mode: shlink_default
   
 # Shlink backend
   shlink:
@@ -63,7 +63,8 @@ services:
       - TZ=Europe/Paris
     
     ports:
-      - target: 8080
+      - mode: ingress
+        target: 8080
         published: "8081"
         protocol: tcp
     
@@ -83,8 +84,7 @@ services:
           description:
             en_us: API port
 
-    networks:
-      - shlink_default
+    network_mode: shlink_default
 
 # postgres database
   database:
@@ -111,11 +111,10 @@ services:
           description:
             en_us: Postgres data directory
 
-    networks:
-      - shlink_default
+    network_mode: shlink_default
 
 networks:
-  shlink_default:
+  default:
     driver: bridge
     name: shlink_default
 
