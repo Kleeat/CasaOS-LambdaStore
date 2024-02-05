@@ -117,7 +117,7 @@ services:
       - shlink_default
 
 networks:
-  default:
+  shlink_default:
     driver: bridge
     name: shlink_default
 
