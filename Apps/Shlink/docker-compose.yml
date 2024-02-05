@@ -7,7 +7,7 @@ services:
     image: shlinkio/shlink-web-client:stable
     container_name: web-client
     hostname: web-client
-    restart: no
+    restart: unless-stopped
 
     depends_on:
       shlink:
@@ -25,6 +25,10 @@ services:
         target: /usr/share/nginx/html
         bind:
           create_host_path: true
+      - type: bind
+        source: /DATA/AppData/shlink/servers.json
+        target: /usr/share/nginx/html/servers.json
+
     x-casaos:
       ports:
         - container: "8080"
@@ -33,11 +37,10 @@ services:
       volumes:
         - container: /usr/share/nginx/html
           description:
+            en_us: Web client server data directory
+        - container: /usr/share/nginx/html/servers.json
+          description:
             en_us: Web client server data
-
-    command:
-            - touch /usr/share/nginx/html/servers.json;
-            - nginx -g daemon off;
 
     networks: 
       - shlink_default
@@ -47,7 +50,7 @@ services:
     image: shlinkio/shlink:stable
     container_name: shlink
     hostname: shlink
-    restart: no
+    restart: unless-stopped
 
     depends_on:
       database:
@@ -93,7 +96,7 @@ services:
     image: postgres:latest
     hostname: database
     container_name: database
-    restart: no
+    restart: unless-stopped
 
     environment:
       - POSTGRES_DB=shlink
@@ -139,10 +142,10 @@ x-casaos:
   store_app_id: shlink
   tagline:
     en_us: Short urls with a click
-  # tips:
-  #   before_install:
-  #     en_us: |
-  #       Before installing the servers.json must be manually created.
+  tips:
+    before_install:
+      en_us: |
+        Before installing the /DATA/AppData/shlink/servers.json must be manually created.
   title:
     custom: ""
     en_us: Shlink
