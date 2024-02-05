@@ -8,10 +8,14 @@ services:
     container_name: web-client
     hostname: web-client
     restart: unless-stopped
+
+    depends_on:
+      shlink:
+        condition: service_started
+        required: true
     
     ports:
-      - mode: ingress
-        target: 8080
+      - target: 8080
         published: "8082"
         protocol: tcp
     
@@ -33,7 +37,7 @@ services:
 
     command: touch /usr/share/nginx/html/servers.json
 
-    network_mode: bridge
+    network_mode: shlink_default
   
 # Shlink backend
   shlink:
@@ -49,7 +53,7 @@ services:
     
     environment:
       - DB_DRIVER=postgres
-      - DB_HOST=db
+      - DB_HOST=database
       - DB_NAME=shlink
       - DB_PASSWORD=password
       - DB_USER=shlink
@@ -58,8 +62,7 @@ services:
       - TZ=Europe/Paris
     
     ports:
-      - mode: ingress
-        target: 8080
+      - target: 8080
         published: "8081"
         protocol: tcp
     
@@ -79,13 +82,13 @@ services:
           description:
             en_us: API port
 
-    network_mode: bridge
+    network_mode: shlink_default
 
 # postgres database
   database:
-    image: postgres:alpine
-    hostname: db
-    container_name: db
+    image: postgres:latest
+    hostname: database
+    container_name: database
     restart: unless-stopped
 
     environment:
@@ -99,14 +102,18 @@ services:
         target: /var/lib/postgresql/data
         bind:
           create_host_path: true
-    
+
     x-casaos:
       volumes:
         - container: /var/lib/postgresql/data
           description:
             en_us: Postgres data directory
-    networks:
-      - default
+
+    network_mode: shlink_default
+
+networks:
+  default:
+    name: shlink_default
 
 x-casaos:
   architectures:
