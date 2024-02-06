@@ -21,11 +21,6 @@ services:
     
     volumes:
       - type: bind
-        source: /DATA/AppData/shlink
-        target: /usr/share/nginx/html
-        bind:
-          create_host_path: true
-      - type: bind
         source: /DATA/AppData/shlink/servers.json
         target: /usr/share/nginx/html/servers.json
 
